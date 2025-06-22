@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">  
+    <!-- xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security" -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div th:fragment="css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/css/reset.css">
+        <link rel="stylesheet" href="/css/layout.css">
+    </div>
+    <title>Layout</title>
+</head>
+<body>
+    <nav th:fragment="header">
+        <div class="header container">
+            <h2><strong>Motor Tycoon</strong></h2>
+
+            <ul id="options">
+                <li><a th:href="@{/}">Home</a></li>
+                <li th:if="${#authorization.expression('isAuthenticated()')}"><a th:href="@{/carrinho}">Carrinho</a> <span th:text="${#authentication.principal.carrinhoAtual.obterTamanhoCarrinho()}"></span></li>     
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/equipamento}">Equipamento</a></li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/categoria}">Categoria</a></li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/pagamento}">Pagamento</a></li>    
+                <li sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/usuario}">Usuário</a></li>    
+            </ul>
+
+            <ul id="login">
+                <li  th:if="${#authorization.expression('isAuthenticated()')}">Bem vindo, <span th:text="${#authentication.principal.nomeCompleto}"></span>
+                    <span th:text="${#authentication.authorities}"></span>
+                </li>
+
+                <li th:if="${#authorization.expression('isAuthenticated()')}"><a th:href="@{/login/redefinir}">Mudar senha</a></li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}"><a th:href="@{/login/registrar}">Cadastrar</a></li>
+                <li th:unless="${#authorization.expression('isAuthenticated()')}"><a th:href="@{/login}">Login</a></li>
+
+                <form th:action="@{/logout}" method="post" th:if="${#authorization.expression('isAuthenticated()')}">
+                    <button type="submit">Sair</button>
+                </form>
+            </ul>
+        </div>
+    </nav>
+</body>
+</html>
